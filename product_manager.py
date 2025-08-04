@@ -5,15 +5,16 @@ class ProductManager:
         self.products = {}
 
     def add_product(self, id, name, quantity, price):
-        if id not in self.products:
-            self.products[id] = Product(id, name, quantity, price)
-
-    def update_quantity(self, id, quantity):
         if id in self.products:
-            self.products[id].quantity = quantity
+            raise ValueError(f"Product with ID {id} already exists.")
+        self.products[id] = Product(id, name, quantity, price)
 
     def get_product(self, id):
         return self.products.get(id)
+
+    def update_quantity(self, id, new_quantity):
+        if id in self.products:
+            self.products[id].quantity = new_quantity
 
     def get_all_products(self):
         return list(self.products.values())

@@ -1,26 +1,23 @@
 from product_manager import ProductManager
 from stock_heap import StockHeap
-from price_bst import PriceBST
+from avl_tree import AVLTree
 
-if __name__ == "__main__":
-    manager = ProductManager()
-    manager.add_product("P001", "Laptop", 5, 1000)
-    manager.add_product("P002", "Mouse", 2, 20)
-    manager.add_product("P003", "Keyboard", 8, 50)
+manager = ProductManager()
+manager.add_product("P001", "Laptop", 5, 1000)
+manager.add_product("P002", "Mouse", 2, 20)
+manager.add_product("P003", "Keyboard", 8, 50)
 
-    print("All Products:")
-    for product in manager.get_all_products():
-        print(f"{product.name} - Qty: {product.quantity} - Price: ${product.price}")
+print("Low-stock items:")
+stock_heap = StockHeap(manager.get_all_products())
+for item in stock_heap.get_low_stock(2):
+    print(f"{item.name} - {item.quantity} left")
 
-    print("\nLow Stock Items:")
-    stock_heap = StockHeap(manager.get_all_products())
-    for item in stock_heap.get_low_stock(2):
-        print(f"{item.name}: {item.quantity} units")
-
-    print("\nProducts Sorted by Price:")
-    bst = PriceBST()
-    for product in manager.get_all_products():
-        bst.insert(product)
-
-    for p in bst.inorder():
-        print(f"{p.name}: ${p.price}")
+print("\nPrice-sorted products:")
+avl = AVLTree()
+root = None
+for product in manager.get_all_products():
+    root = avl.insert(root, product)
+sorted_by_price = []
+avl.inorder(root, sorted_by_price)
+for p in sorted_by_price:
+    print(f"{p.name} - ${p.price}")
